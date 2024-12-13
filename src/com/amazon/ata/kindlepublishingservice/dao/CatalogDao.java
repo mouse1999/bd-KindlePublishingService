@@ -7,9 +7,12 @@ import com.amazon.ata.kindlepublishingservice.utils.KindlePublishingUtils;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 
 public class CatalogDao {
@@ -41,18 +44,27 @@ public class CatalogDao {
 
         return book;
     }
+    public void saveBookToCatalog(CatalogItemVersion catalogItemVersion) {
+        dynamoDbMapper.save(catalogItemVersion);
+    }
 
     // Returns null if no version exists for the provided bookId
     private CatalogItemVersion getLatestVersionOfBook(String bookId) {
         CatalogItemVersion book = new CatalogItemVersion();
         book.setBookId(bookId);
 
-        DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression()
+        DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression<CatalogItemVersion>()
             .withHashKeyValues(book)
+                .withFilterExpression("inactive = :inactiveVal")
+                .withExpressionAttributeValues(Map.of(
+                        ":inactiveVal", new AttributeValue().withBOOL(false)
+                ))
             .withScanIndexForward(false)
             .withLimit(1);
-
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
+
+
+
         if (results.isEmpty()) {
             return null;
         }
