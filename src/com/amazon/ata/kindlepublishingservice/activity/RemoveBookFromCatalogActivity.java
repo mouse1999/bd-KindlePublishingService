@@ -27,6 +27,7 @@ public class RemoveBookFromCatalogActivity {
         String bookId = removeBookFromCatalogRequest.getBookId();
 
         CatalogItemVersion catalogItem = catalogDao.getBookFromCatalog(bookId);
+        System.out.println(catalogItem);
 
 
 // Mark the book as inactive

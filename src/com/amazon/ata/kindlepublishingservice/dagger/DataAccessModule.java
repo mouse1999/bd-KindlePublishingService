@@ -21,6 +21,7 @@ public class DataAccessModule {
             .withRegion(Regions.US_WEST_2)
             .build();
 
+
         return new DynamoDBMapper(amazonDynamoDBClient);
     }
 }

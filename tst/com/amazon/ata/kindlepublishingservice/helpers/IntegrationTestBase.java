@@ -67,7 +67,7 @@ public abstract class IntegrationTestBase {
     public void teardown() {
         // this is only safe to run in the aftersuite when all tests have executed
         // otherwise we risk deleting parallel tests' data
-        KINDLE_PUBLISHING_SERVICE_TCT_TEST_DAO.cleanup();
+        //KINDLE_PUBLISHING_SERVICE_TCT_TEST_DAO.cleanup();
     }
 
     // Configuring client manually so that we can override the endpoint.

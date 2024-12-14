@@ -61,6 +61,7 @@ public class KindlePublishingServiceTctTestDao {
      * in the @AfterSuite annotation when all tests are done. Otherwise you
      * risk deleting running tests' data!
      */
+
     void cleanup() {
         System.out.println(String.format("Cleaning up test data, wrote [%s] items to DynamoDB.",
             itemsToCleanup.size()));
@@ -75,6 +76,7 @@ public class KindlePublishingServiceTctTestDao {
             }
         }
     }
+
 
     /**
      * Common interface of what this DAO can save.

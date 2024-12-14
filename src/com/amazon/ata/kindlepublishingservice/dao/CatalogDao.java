@@ -43,6 +43,8 @@ public class CatalogDao {
         }
 
         return book;
+
+
     }
     public void saveBookToCatalog(CatalogItemVersion catalogItemVersion) {
         dynamoDbMapper.save(catalogItemVersion);
@@ -57,12 +59,11 @@ public class CatalogDao {
             .withHashKeyValues(book)
                 .withFilterExpression("inactive = :inactiveVal")
                 .withExpressionAttributeValues(Map.of(
-                        ":inactiveVal", new AttributeValue().withBOOL(false)
+                        ":inactiveVal", new AttributeValue().withN("0")
                 ))
             .withScanIndexForward(false)
             .withLimit(1);
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
-
 
 
         if (results.isEmpty()) {
