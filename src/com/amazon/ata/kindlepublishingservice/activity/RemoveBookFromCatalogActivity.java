@@ -30,7 +30,7 @@ public class RemoveBookFromCatalogActivity {
         System.out.println(catalogItem);
 
 
-// Mark the book as inactive
+        // Mark the book as inactive
         catalogItem.setInactive(true);
 
         catalogDao.saveBookToCatalog(catalogItem);

@@ -11,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -46,6 +47,18 @@ public class CatalogDao {
 
 
     }
+
+    /**
+     * Returns the latest version of the book from the catalog corresponding to the specified book id.
+     * return null f the latest version is not active or no version is found.
+     * param bookId Id associated with the book.
+     * @return The corresponding CatalogItem from the catalog table.
+     */
+
+    public CatalogItemVersion getBook(String bookId) {
+        return getLatestVersionOfBook(bookId);
+    }
+
     public void saveBookToCatalog(CatalogItemVersion catalogItemVersion) {
         dynamoDbMapper.save(catalogItemVersion);
     }
@@ -70,5 +83,31 @@ public class CatalogDao {
             return null;
         }
         return results.get(0);
+    }
+
+    /**
+     * if no active book is found in the catalog,throw BookNotFoundException
+     * else the method validates the existing bookId
+     *
+     * i want to query the database to return objects whether active or inactive in a descending manner using query
+     * @param bookId
+     */
+
+    public void validateBookExists(String bookId) {
+        CatalogItemVersion book = new CatalogItemVersion();
+        book.setBookId(bookId);
+
+
+        DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression<CatalogItemVersion>()
+                .withHashKeyValues(book)
+                .withScanIndexForward(false)
+                .withLimit(1);
+
+
+        List<CatalogItemVersion> result = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
+        if(result.isEmpty()) {
+            throw new BookNotFoundException("Book not found for this Id " + bookId);
+        }
+
     }
 }

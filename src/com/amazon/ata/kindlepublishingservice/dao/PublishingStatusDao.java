@@ -46,6 +46,7 @@ public class PublishingStatusDao {
     }
 
     /**
+     *
      * Updates the publishing status table for the given publishingRecordId with the provided
      * publishingRecordStatus. If the bookId is provided it will also be stored in the record. If
      * a message is provided, it will be appended to the publishing status message in the datastore.
