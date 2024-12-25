@@ -11,6 +11,7 @@ import java.util.List;
 
 public class GetPublishingStatusActivity {
 
+
     private PublishingStatusDao publishingStatusDao;
 
     @Inject
