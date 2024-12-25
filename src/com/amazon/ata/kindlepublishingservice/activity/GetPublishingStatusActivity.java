@@ -21,6 +21,7 @@ public class GetPublishingStatusActivity {
     }
 
     public GetPublishingStatusResponse execute(GetPublishingStatusRequest request) {
+
         final String publishingRecordId = request.getPublishingRecordId();
 
         List<PublishingStatusItem> items = publishingStatusDao.getPublishingStatus(publishingRecordId);
