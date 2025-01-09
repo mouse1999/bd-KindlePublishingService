@@ -110,4 +110,53 @@ public class CatalogDao {
         }
 
     }
+    public CatalogItemVersion createOrUpdate(KindleFormattedBook formattedBook) {
+        CatalogItemVersion catalogItem;
+
+        if (formattedBook.getBookId() == null) {
+            // Create a new book entry
+            catalogItem = createNewBookEntry(formattedBook);
+        } else {
+            // Update an existing book entry
+            catalogItem = updateExistingBookEntry(formattedBook);
+        }
+
+        return catalogItem;
+    }
+
+    private CatalogItemVersion createNewBookEntry(KindleFormattedBook formattedBook) {
+        CatalogItemVersion newBook = new CatalogItemVersion();
+        newBook.setInactive(false);
+        newBook.setVersion(1);
+        newBook.setBookId(KindlePublishingUtils.generateBookId());
+        populateBookDetails(newBook, formattedBook);
+        saveBookToCatalog(newBook);
+        return newBook;
+    }
+
+    private CatalogItemVersion updateExistingBookEntry(KindleFormattedBook formattedBook) {
+        CatalogItemVersion existingBook = getBookFromCatalog(formattedBook.getBookId());
+
+        // Mark the current version as inactive
+        existingBook.setInactive(true);
+        saveBookToCatalog(existingBook);
+
+        // Create a new version of the book
+        CatalogItemVersion updatedBook = new CatalogItemVersion();
+        updatedBook.setBookId(existingBook.getBookId());
+        updatedBook.setVersion(existingBook.getVersion() + 1);
+        updatedBook.setInactive(false);
+        populateBookDetails(updatedBook, formattedBook);
+        saveBookToCatalog(updatedBook);
+
+        return updatedBook;
+    }
+
+    private void populateBookDetails(CatalogItemVersion book, KindleFormattedBook formattedBook) {
+        book.setAuthor(formattedBook.getAuthor());
+        book.setText(formattedBook.getText());
+        book.setGenre(formattedBook.getGenre());
+        book.setTitle(formattedBook.getTitle());
+    }
+
 }

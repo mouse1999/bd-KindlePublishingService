@@ -58,11 +58,6 @@ public class SubmitBookForPublishingActivity {
         if(bookPublishRequest.getBookId() != null) {
             catalogDao.validateBookExists(bookPublishRequest.getBookId());
 
-            CatalogItemVersion latestBookVersion = catalogDao.getBook(bookPublishRequest.getBookId());
-            if (null != latestBookVersion ) {
-                latestBookVersion.setInactive(true);
-                catalogDao.saveBookToCatalog(latestBookVersion);
-            }
         }
         requestManager.addBookPublishRequest(bookPublishRequest);
 
