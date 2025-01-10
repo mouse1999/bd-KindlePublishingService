@@ -9,6 +9,7 @@ import com.amazon.ata.recommendationsservice.types.BookGenre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -26,12 +27,13 @@ public class BookPublishTaskTest {
     @Mock
     private CatalogDao mockCatalogDao;
 
+    @InjectMocks
     private BookPublishTask bookPublishTask;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        bookPublishTask = new BookPublishTask(mockRequestManager, mockPublishingStatusDao, mockCatalogDao);
+
     }
 
     @Test
@@ -49,7 +51,7 @@ public class BookPublishTaskTest {
 
     @Test
     void testRun_SuccessfulPublish() {
-        // Arrange
+        // GIVEN
         BookPublishRequest bookPublishRequest = BookPublishRequest.builder()
                 .withPublishingRecordId("record123")
                 .withBookId("book123")
@@ -76,10 +78,10 @@ public class BookPublishTaskTest {
         // Create an ArgumentCaptor for KindleFormattedBook
         ArgumentCaptor<KindleFormattedBook> captor = ArgumentCaptor.forClass(KindleFormattedBook.class);
 
-        // Act
+        // WHEN
         bookPublishTask.run();
 
-        // Assert
+        // THEN
         verify(mockCatalogDao).createOrUpdate(captor.capture());
         KindleFormattedBook capturedBook = captor.getValue();
 
